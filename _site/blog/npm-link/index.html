@@ -1,0 +1,672 @@
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Desarrollo local de módulos Node.js con npm link</title>
+		<meta name="description" content="Es un pequeño blog sobre desarrollo web, desarrollo android y servidores. Aquí comparto mis experiencias, aprendizajes y recursos útiles para otros desarrolladores que estén interesados en el mundo del desarrollo web.">
+		<link rel="alternate" href="/rutadev/feed/feed.xml" type="application/atom+xml" title="RutaDev">
+		
+		
+		
+		<style>/* This is an arbitrary CSS string added to the bundle */
+/* Defaults */
+@font-face {
+	font-family: 'IBMPlexSans';
+	font-style: normal;
+	font-weight: 400;
+	src:
+		local("IBMPlexSans"),
+		url("/fonts/IBMPlexSans-Variable.woff2") format("woff2");
+}
+
+:root {
+	--font-family: 'IBMPlexSans', -apple-system, system-ui, sans-serif;
+	--font-family-monospace: Consolas, Menlo, Monaco, Andale Mono WT, Andale Mono, Lucida Console, Lucida Sans Typewriter, DejaVu Sans Mono, Bitstream Vera Sans Mono, Liberation Mono, Nimbus Mono L, Courier New, Courier, monospace;
+}
+
+/* Theme colors */
+:root {
+	--color-gray-20: #e0e0e0;
+	--color-gray-50: #C0C0C0;
+	--color-gray-90: #333;
+
+	--background-color: #fff;
+
+	--text-color: var(--color-gray-90);
+	--text-color-link: #1493fb;
+	--text-color-link-active: #0359a0;
+	--text-color-link-visited: #035598;
+
+	--syntax-tab-size: 2;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-gray-20: #e0e0e0;
+		--color-gray-50: #C0C0C0;
+		--color-gray-90: #dad8d8;
+
+		/* --text-color is assigned to --color-gray-_ above */
+		--text-color-link: #1493fb;
+		--text-color-link-active: #0359a0;
+		--text-color-link-visited: #dad8d8;
+
+		--background-color: #15202b;
+	}
+}
+
+
+/* Global stylesheet */
+* {
+	box-sizing: border-box;
+}
+
+@view-transition {
+	navigation: auto;
+}
+
+html,
+body {
+	padding: 0;
+	margin: 0 auto;
+	font-family: var(--font-family);
+	color: var(--text-color);
+	background-color: var(--background-color);
+}
+
+html {
+	overflow-y: scroll;
+}
+
+body {
+	max-width: 40em;
+}
+
+/* https://www.a11yproject.com/posts/how-to-hide-content/ */
+.visually-hidden:not(:focus):not(:active) {
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
+/* Fluid images via https://www.zachleat.com/web/fluid-images/ */
+img {
+	max-width: 100%;
+}
+
+img[width][height] {
+	height: auto;
+}
+
+img[src$=".svg"] {
+	width: 100%;
+	height: auto;
+	max-width: none;
+}
+
+video,
+iframe {
+	width: 100%;
+	height: auto;
+}
+
+iframe {
+	aspect-ratio: 16/9;
+}
+
+p:last-child {
+	margin-bottom: 0;
+}
+
+p {
+	line-height: 1.5;
+}
+
+li {
+	line-height: 1.5;
+}
+
+a[href] {
+	color: var(--text-color-link);
+}
+
+a[href]:visited {
+	color: var(--text-color-link-visited);
+}
+
+a[href]:hover,
+a[href]:active {
+	color: var(--text-color-link-active);
+}
+
+main,
+footer {
+	padding: 1rem;
+}
+
+.site-footer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 1em;
+}
+
+main :first-child {
+	margin-top: 0;
+}
+
+header {
+	border-bottom: 1px dashed var(--color-gray-20);
+}
+
+#skip-link {
+	text-decoration: none;
+	background: var(--background-color);
+	color: var(--text-color);
+	padding: 0.5rem 1rem;
+	border: 1px solid var(--color-gray-90);
+	border-radius: 2px;
+}
+
+/* Prevent visually-hidden skip link fom pushing content around when focused */
+#skip-link.visually-hidden:focus {
+	position: absolute;
+	top: 1rem;
+	left: 1rem;
+	/* Ensure it is positioned on top of everything else when it is shown */
+	z-index: 999;
+}
+
+.links-nextprev {
+	display: flex;
+	justify-content: space-between;
+	gap: .5em 1em;
+	list-style: "";
+	border-top: 1px dashed var(--color-gray-20);
+	padding: 1em 0;
+}
+
+.links-nextprev>* {
+	flex-grow: 1;
+}
+
+.links-nextprev-next {
+	text-align: right;
+}
+
+table {
+	margin: 1em 0;
+}
+
+table td,
+table th {
+	padding-right: 1em;
+}
+
+pre,
+code {
+	font-family: var(--font-family-monospace);
+}
+
+pre:not([class*="language-"]) {
+	margin: .5em 0;
+	line-height: 1.375;
+	/* 22px /16 */
+	-moz-tab-size: var(--syntax-tab-size);
+	-o-tab-size: var(--syntax-tab-size);
+	tab-size: var(--syntax-tab-size);
+	-webkit-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+	direction: ltr;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	overflow-x: auto;
+}
+
+code {
+	word-break: break-all;
+}
+
+/* Header */
+header {
+	display: flex;
+	gap: 1em;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+	padding: 1em;
+}
+
+.home-link {
+	flex-grow: 1;
+	font-size: 1em;
+	/* 16px /16 */
+	font-weight: 700;
+}
+
+.home-link:link:not(:hover) {
+	text-decoration: none;
+}
+
+/* Nav */
+.nav {
+	display: flex;
+	gap: .5em 1em;
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+
+.nav-item {
+	display: inline-block;
+}
+
+.nav-item a[href]:not(:hover) {
+	text-decoration: none;
+}
+
+.nav a[href][aria-current="page"] {
+	text-decoration: underline;
+}
+
+/* Posts list */
+.postlist {
+	counter-reset: start-from var(--postlist-index);
+	list-style: none;
+	padding: 0;
+	padding-left: 1.5rem;
+}
+
+.postlist-item {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	counter-increment: start-from -1;
+	margin-bottom: 1em;
+}
+
+.postlist-item:before {
+	display: inline-block;
+	pointer-events: none;
+	content: "" counter(start-from, decimal-leading-zero) ". ";
+	line-height: 100%;
+	text-align: right;
+	margin-left: -1.5rem;
+}
+
+.postlist-date,
+.postlist-item:before {
+	font-size: 0.8125em;
+	/* 13px /16 */
+	color: var(--color-gray-90);
+}
+
+.postlist-date {
+	word-spacing: -0.5px;
+}
+
+.postlist-link {
+	font-size: 1.1875em;
+	/* 19px /16 */
+	font-weight: 700;
+	flex-basis: calc(100% - 1.5rem);
+	padding-left: .25em;
+	padding-right: .5em;
+	text-underline-position: from-font;
+	text-underline-offset: 0;
+	text-decoration-thickness: 1px;
+}
+
+.postlist-item-active .postlist-link {
+	font-weight: bold;
+}
+
+/* Tags */
+.post-tag {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	text-transform: capitalize;
+	font-style: italic;
+}
+
+.postlist-item>.post-tag {
+	align-self: center;
+}
+
+/* Tags list */
+.post-metadata {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: .5em;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.post-metadata time {
+	margin-right: 1em;
+}
+
+div table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 1em 0;
+	font-family: Arial, sans-serif;
+}
+
+div table th,
+div table td {
+	border: 1px solid #dddddd20;
+	padding: 8px 12px;
+	text-align: left;
+}
+
+div table th {
+	background-color: #f2f2f220;
+	font-weight: bold;
+}
+
+div table tr:nth-child(even) {
+	background-color: #f9f9f910;
+}
+
+div table tr:hover {
+	background-color: #f1f1f107;
+}
+/**
+ * okaidia theme for JavaScript, CSS and HTML
+ * Loosely based on Monokai textmate theme by http://www.monokai.nl/
+ * @author ocodia
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+	color: #f8f8f2;
+	background: none;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	font-size: 1em;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+	line-height: 1.5;
+
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+	padding: 1em;
+	margin: .5em 0;
+	overflow: auto;
+	border-radius: 0.3em;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+	background: #272822;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+	padding: .1em;
+	border-radius: .3em;
+	white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+	color: #8292a2;
+}
+
+.token.punctuation {
+	color: #f8f8f2;
+}
+
+.token.namespace {
+	opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+	color: #f92672;
+}
+
+.token.boolean,
+.token.number {
+	color: #ae81ff;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+	color: #a6e22e;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+	color: #f8f8f2;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.function,
+.token.class-name {
+	color: #e6db74;
+}
+
+.token.keyword {
+	color: #66d9ef;
+}
+
+.token.regex,
+.token.important {
+	color: #fd971f;
+}
+
+.token.important,
+.token.bold {
+	font-weight: bold;
+}
+.token.italic {
+	font-style: italic;
+}
+
+.token.entity {
+	cursor: help;
+}
+/*
+ * New diff- syntax
+ */
+
+pre[class*="language-diff-"] {
+	--eleventy-code-padding: 1.25em;
+	padding-left: var(--eleventy-code-padding);
+	padding-right: var(--eleventy-code-padding);
+}
+.token.deleted {
+	background-color: hsl(0, 51%, 37%);
+	color: inherit;
+}
+.token.inserted {
+	background-color: hsl(126, 31%, 39%);
+	color: inherit;
+}
+
+/* Make the + and - characters unselectable for copy/paste */
+.token.prefix.unchanged,
+.token.prefix.inserted,
+.token.prefix.deleted {
+	-webkit-user-select: none;
+	user-select: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+.token.prefix.inserted,
+.token.prefix.deleted {
+	width: var(--eleventy-code-padding);
+	background-color: rgba(0,0,0,.2);
+}
+
+/* Optional: full-width background color */
+.token.inserted:not(.prefix),
+.token.deleted:not(.prefix) {
+	display: block;
+	margin-left: calc(-1 * var(--eleventy-code-padding));
+	margin-right: calc(-1 * var(--eleventy-code-padding));
+	text-decoration: none; /* override del, ins, mark defaults */
+	color: inherit; /* override del, ins, mark defaults */
+}</style>
+		
+	</head>
+	<body>
+		<a href="#main" id="skip-link" class="visually-hidden">Saltar al contenido principal</a>
+
+		<header>
+			<a href="/rutadev/" class="home-link">RutaDev</a>
+			<nav>
+				<h2 class="visually-hidden" id="navigation-principal">Navigation principal</h2>
+				<ul class="nav">
+					<li class="nav-item"><a href="/rutadev/">Inicio</a></li>
+					<li class="nav-item"><a href="/rutadev/blog/">Archivo</a></li>
+					<li class="nav-item"><a href="/rutadev/about/">Sobre mí</a></li>
+					<li class="nav-item"><a href="/rutadev/feed/feed.xml">Feed</a></li>
+				</ul>
+			</nav>
+		</header>
+
+		<main id="main">
+			<heading-anchors>
+				
+
+
+<h1 id="desarrollo-local-de-modulos-node-js-con-npm-link">Desarrollo local de módulos Node.js con npm link</h1>
+
+<ul class="post-metadata">
+	<li><time datetime="2024-06-23">23 junio 2024</time></li>
+	<li><a href="/rutadev/tags/node/" class="post-tag">node</a></li>
+</ul>
+
+<p>En el trabajo, manejamos un módulo de nuestra aplicación como un paquete independiente. Antes, para probar cambios, seguía estos pasos:</p>
+<ol>
+<li>Modificaba el código en el repositorio del paquete.</li>
+<li>Publicaba una nueva versión.</li>
+<li>Actualizaba la dependencia en la aplicación principal.</li>
+<li>Verificaba que todo funcionara.</li>
+</ol>
+<p>Para cambios pequeños, a veces editaba directamente el código en <code>node_modules</code> y luego copiaba los cambios al repositorio del paquete. Sin embargo, existe una forma más eficiente: <strong><code>npm link</code></strong>.</p>
+<h4 id="por-que-usar-npm-link"><strong>¿Por qué usar <code>npm link</code>?</strong></h4>
+<p>Permite probar cambios en tiempo real en la aplicación principal sin necesidad de publicar nuevas versiones del paquete.</p>
+<h4 id="uso-basico"><strong>Uso básico</strong></h4>
+<ol>
+<li><strong>Crea un enlace simbólico global</strong> para el módulo:<pre class="language-bash" tabindex="0"><code class="language-bash"><span class="token builtin class-name">cd</span> path/to/your/module
+<span class="token function">npm</span> <span class="token function">link</span>  <span class="token comment"># Crea un enlace simbólico global</span></code></pre>
+</li>
+<li><strong>Vincula el módulo</strong> a tu proyecto:<pre class="language-bash" tabindex="0"><code class="language-bash"><span class="token builtin class-name">cd</span> path/to/your/project
+<span class="token function">npm</span> <span class="token function">link</span> <span class="token operator">&lt;</span>module_name<span class="token operator">></span>  <span class="token comment"># Usa el módulo vinculado</span></code></pre>
+</li>
+</ol>
+<h4 id="escenarios-avanzados"><strong>Escenarios avanzados</strong></h4>
+<h5 id="multiples-modulos-locales"><strong>Múltiples módulos locales</strong></h5>
+<p>Si trabajas con módulos interdependientes (ej: <code>module-a</code> y <code>module-b</code>, donde <code>module-b</code> depende de <code>module-a</code>):</p>
+<pre class="language-bash" tabindex="0"><code class="language-bash"><span class="token builtin class-name">cd</span> path/to/module-a
+<span class="token function">npm</span> <span class="token function">link</span>  <span class="token comment"># Registra module-a globalmente</span>
+
+<span class="token builtin class-name">cd</span> <span class="token punctuation">..</span>/module-b
+<span class="token function">npm</span> <span class="token function">link</span>  <span class="token comment"># Registra module-b globalmente</span>
+<span class="token function">npm</span> <span class="token function">link</span> module-a  <span class="token comment"># Vincula module-b con module-a</span></code></pre>
+<p>Esto permite desarrollar y probar módulos interdependientes en tiempo real.</p>
+<h5 id="gestionar-dependencias-entre-modulos-vinculados"><strong>Gestionar dependencias entre módulos vinculados</strong></h5>
+<p>Para asegurar que todos los módulos usen las últimas versiones:</p>
+<ul>
+<li>Ejecuta <code>npm update</code> en cada módulo.</li>
+<li>Re-ejecuta <code>npm link</code> después de actualizar para sincronizar los cambios.</li>
+</ul>
+<h4 id="alternativas-a-npm-link"><strong>Alternativas a <code>npm link</code></strong></h4>
+<div class=""><table class=""><thead>
+<tr>
+<th>Herramienta</th>
+<th>Descripción</th>
+<th>Ventajas</th>
+<th>Desventajas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>npm link</strong></td>
+<td>Crea enlaces simbólicos para desarrollo local.</td>
+<td>Ideal para pruebas en tiempo real.</td>
+<td>Solo funciona localmente.</td>
+</tr>
+<tr>
+<td><strong>npm pack</strong></td>
+<td>Genera un archivo <code>.tgz</code> del módulo para instalarlo manualmente.</td>
+<td>Simula una instalación real.</td>
+<td>Requiere reinstalar el paquete manualmente.</td>
+</tr>
+<tr>
+<td><strong>yarn link</strong></td>
+<td>Similar a <code>npm link</code>, pero para Yarn.</td>
+<td>Integración con Yarn.</td>
+<td>Limitado a Yarn.</td>
+</tr>
+<tr>
+<td><strong>Lerna</strong></td>
+<td>Herramienta para gestionar monorepos con múltiples paquetes interdependientes.</td>
+<td>Optimizado para monorepos.</td>
+<td>Curva de aprendizaje.</td>
+</tr>
+</tbody>
+</table></div><hr>
+<p>Enlaces útiles:
+<a href="https://medium.com/dailyjs/how-to-use-npm-link-7375b6219557">Medium</a> |
+<a href="https://ioflood.com/blog/npm-link/">ioflood</a></p>
+
+<ul class="links-nextprev"><li class="links-nextprev-prev">← Previo<br> <a href="/rutadev/blog/pico-css-nuxt-3/">Cómo integrar Pico.css en un proyecto de Nuxt 3</a></li><li class="links-nextprev-next">Siguiente →<br><a href="/rutadev/blog/multiples-configuraciones-control-versiones/">Gestionar configuraciones de Git para múltiples servicios (GIT)</a></li>
+</ul>
+
+			</heading-anchors>
+		</main>
+
+		<footer class="site-footer">
+			<a target="_blank" href="https://pereyrapaula.com.ar">Paula Pereyra</a>
+			<em>Construido con <a href="https://www.11ty.dev/">Eleventy</a></em>
+		</footer>
+
+		<!-- This page `/blog/npm-link/` was built on 2026-03-28T03:51:27.256Z -->
+		<script type="module" src="/rutadev/dist/cC8wS6ZjFU.js"></script>
+	</body>
+</html>

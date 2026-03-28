@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Pattern Matching en TypeScript - Explicado de manera sencilla</title>
+		<meta name="description" content="Es un pequeño blog sobre desarrollo web, desarrollo android y servidores. Aquí comparto mis experiencias, aprendizajes y recursos útiles para otros desarrolladores que estén interesados en el mundo del desarrollo web.">
+		<link rel="alternate" href="/rutadev/feed/feed.xml" type="application/atom+xml" title="RutaDev">
+		
+		
+		
+		<style>/* This is an arbitrary CSS string added to the bundle */
+/* Defaults */
+@font-face {
+	font-family: 'IBMPlexSans';
+	font-style: normal;
+	font-weight: 400;
+	src:
+		local("IBMPlexSans"),
+		url("/fonts/IBMPlexSans-Variable.woff2") format("woff2");
+}
+
+:root {
+	--font-family: 'IBMPlexSans', -apple-system, system-ui, sans-serif;
+	--font-family-monospace: Consolas, Menlo, Monaco, Andale Mono WT, Andale Mono, Lucida Console, Lucida Sans Typewriter, DejaVu Sans Mono, Bitstream Vera Sans Mono, Liberation Mono, Nimbus Mono L, Courier New, Courier, monospace;
+}
+
+/* Theme colors */
+:root {
+	--color-gray-20: #e0e0e0;
+	--color-gray-50: #C0C0C0;
+	--color-gray-90: #333;
+
+	--background-color: #fff;
+
+	--text-color: var(--color-gray-90);
+	--text-color-link: #1493fb;
+	--text-color-link-active: #0359a0;
+	--text-color-link-visited: #035598;
+
+	--syntax-tab-size: 2;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-gray-20: #e0e0e0;
+		--color-gray-50: #C0C0C0;
+		--color-gray-90: #dad8d8;
+
+		/* --text-color is assigned to --color-gray-_ above */
+		--text-color-link: #1493fb;
+		--text-color-link-active: #0359a0;
+		--text-color-link-visited: #dad8d8;
+
+		--background-color: #15202b;
+	}
+}
+
+
+/* Global stylesheet */
+* {
+	box-sizing: border-box;
+}
+
+@view-transition {
+	navigation: auto;
+}
+
+html,
+body {
+	padding: 0;
+	margin: 0 auto;
+	font-family: var(--font-family);
+	color: var(--text-color);
+	background-color: var(--background-color);
+}
+
+html {
+	overflow-y: scroll;
+}
+
+body {
+	max-width: 40em;
+}
+
+/* https://www.a11yproject.com/posts/how-to-hide-content/ */
+.visually-hidden:not(:focus):not(:active) {
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
+/* Fluid images via https://www.zachleat.com/web/fluid-images/ */
+img {
+	max-width: 100%;
+}
+
+img[width][height] {
+	height: auto;
+}
+
+img[src$=".svg"] {
+	width: 100%;
+	height: auto;
+	max-width: none;
+}
+
+video,
+iframe {
+	width: 100%;
+	height: auto;
+}
+
+iframe {
+	aspect-ratio: 16/9;
+}
+
+p:last-child {
+	margin-bottom: 0;
+}
+
+p {
+	line-height: 1.5;
+}
+
+li {
+	line-height: 1.5;
+}
+
+a[href] {
+	color: var(--text-color-link);
+}
+
+a[href]:visited {
+	color: var(--text-color-link-visited);
+}
+
+a[href]:hover,
+a[href]:active {
+	color: var(--text-color-link-active);
+}
+
+main,
+footer {
+	padding: 1rem;
+}
+
+.site-footer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 1em;
+}
+
+main :first-child {
+	margin-top: 0;
+}
+
+header {
+	border-bottom: 1px dashed var(--color-gray-20);
+}
+
+#skip-link {
+	text-decoration: none;
+	background: var(--background-color);
+	color: var(--text-color);
+	padding: 0.5rem 1rem;
+	border: 1px solid var(--color-gray-90);
+	border-radius: 2px;
+}
+
+/* Prevent visually-hidden skip link fom pushing content around when focused */
+#skip-link.visually-hidden:focus {
+	position: absolute;
+	top: 1rem;
+	left: 1rem;
+	/* Ensure it is positioned on top of everything else when it is shown */
+	z-index: 999;
+}
+
+.links-nextprev {
+	display: flex;
+	justify-content: space-between;
+	gap: .5em 1em;
+	list-style: "";
+	border-top: 1px dashed var(--color-gray-20);
+	padding: 1em 0;
+}
+
+.links-nextprev>* {
+	flex-grow: 1;
+}
+
+.links-nextprev-next {
+	text-align: right;
+}
+
+table {
+	margin: 1em 0;
+}
+
+table td,
+table th {
+	padding-right: 1em;
+}
+
+pre,
+code {
+	font-family: var(--font-family-monospace);
+}
+
+pre:not([class*="language-"]) {
+	margin: .5em 0;
+	line-height: 1.375;
+	/* 22px /16 */
+	-moz-tab-size: var(--syntax-tab-size);
+	-o-tab-size: var(--syntax-tab-size);
+	tab-size: var(--syntax-tab-size);
+	-webkit-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+	direction: ltr;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	overflow-x: auto;
+}
+
+code {
+	word-break: break-all;
+}
+
+/* Header */
+header {
+	display: flex;
+	gap: 1em;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+	padding: 1em;
+}
+
+.home-link {
+	flex-grow: 1;
+	font-size: 1em;
+	/* 16px /16 */
+	font-weight: 700;
+}
+
+.home-link:link:not(:hover) {
+	text-decoration: none;
+}
+
+/* Nav */
+.nav {
+	display: flex;
+	gap: .5em 1em;
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+
+.nav-item {
+	display: inline-block;
+}
+
+.nav-item a[href]:not(:hover) {
+	text-decoration: none;
+}
+
+.nav a[href][aria-current="page"] {
+	text-decoration: underline;
+}
+
+/* Posts list */
+.postlist {
+	counter-reset: start-from var(--postlist-index);
+	list-style: none;
+	padding: 0;
+	padding-left: 1.5rem;
+}
+
+.postlist-item {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	counter-increment: start-from -1;
+	margin-bottom: 1em;
+}
+
+.postlist-item:before {
+	display: inline-block;
+	pointer-events: none;
+	content: "" counter(start-from, decimal-leading-zero) ". ";
+	line-height: 100%;
+	text-align: right;
+	margin-left: -1.5rem;
+}
+
+.postlist-date,
+.postlist-item:before {
+	font-size: 0.8125em;
+	/* 13px /16 */
+	color: var(--color-gray-90);
+}
+
+.postlist-date {
+	word-spacing: -0.5px;
+}
+
+.postlist-link {
+	font-size: 1.1875em;
+	/* 19px /16 */
+	font-weight: 700;
+	flex-basis: calc(100% - 1.5rem);
+	padding-left: .25em;
+	padding-right: .5em;
+	text-underline-position: from-font;
+	text-underline-offset: 0;
+	text-decoration-thickness: 1px;
+}
+
+.postlist-item-active .postlist-link {
+	font-weight: bold;
+}
+
+/* Tags */
+.post-tag {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	text-transform: capitalize;
+	font-style: italic;
+}
+
+.postlist-item>.post-tag {
+	align-self: center;
+}
+
+/* Tags list */
+.post-metadata {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: .5em;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.post-metadata time {
+	margin-right: 1em;
+}
+
+div table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 1em 0;
+	font-family: Arial, sans-serif;
+}
+
+div table th,
+div table td {
+	border: 1px solid #dddddd20;
+	padding: 8px 12px;
+	text-align: left;
+}
+
+div table th {
+	background-color: #f2f2f220;
+	font-weight: bold;
+}
+
+div table tr:nth-child(even) {
+	background-color: #f9f9f910;
+}
+
+div table tr:hover {
+	background-color: #f1f1f107;
+}
+/**
+ * okaidia theme for JavaScript, CSS and HTML
+ * Loosely based on Monokai textmate theme by http://www.monokai.nl/
+ * @author ocodia
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+	color: #f8f8f2;
+	background: none;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	font-size: 1em;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+	line-height: 1.5;
+
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+	padding: 1em;
+	margin: .5em 0;
+	overflow: auto;
+	border-radius: 0.3em;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+	background: #272822;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+	padding: .1em;
+	border-radius: .3em;
+	white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+	color: #8292a2;
+}
+
+.token.punctuation {
+	color: #f8f8f2;
+}
+
+.token.namespace {
+	opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+	color: #f92672;
+}
+
+.token.boolean,
+.token.number {
+	color: #ae81ff;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+	color: #a6e22e;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+	color: #f8f8f2;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.function,
+.token.class-name {
+	color: #e6db74;
+}
+
+.token.keyword {
+	color: #66d9ef;
+}
+
+.token.regex,
+.token.important {
+	color: #fd971f;
+}
+
+.token.important,
+.token.bold {
+	font-weight: bold;
+}
+.token.italic {
+	font-style: italic;
+}
+
+.token.entity {
+	cursor: help;
+}
+/*
+ * New diff- syntax
+ */
+
+pre[class*="language-diff-"] {
+	--eleventy-code-padding: 1.25em;
+	padding-left: var(--eleventy-code-padding);
+	padding-right: var(--eleventy-code-padding);
+}
+.token.deleted {
+	background-color: hsl(0, 51%, 37%);
+	color: inherit;
+}
+.token.inserted {
+	background-color: hsl(126, 31%, 39%);
+	color: inherit;
+}
+
+/* Make the + and - characters unselectable for copy/paste */
+.token.prefix.unchanged,
+.token.prefix.inserted,
+.token.prefix.deleted {
+	-webkit-user-select: none;
+	user-select: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+.token.prefix.inserted,
+.token.prefix.deleted {
+	width: var(--eleventy-code-padding);
+	background-color: rgba(0,0,0,.2);
+}
+
+/* Optional: full-width background color */
+.token.inserted:not(.prefix),
+.token.deleted:not(.prefix) {
+	display: block;
+	margin-left: calc(-1 * var(--eleventy-code-padding));
+	margin-right: calc(-1 * var(--eleventy-code-padding));
+	text-decoration: none; /* override del, ins, mark defaults */
+	color: inherit; /* override del, ins, mark defaults */
+}</style>
+		
+	</head>
+	<body>
+		<a href="#main" id="skip-link" class="visually-hidden">Saltar al contenido principal</a>
+
+		<header>
+			<a href="/rutadev/" class="home-link">RutaDev</a>
+			<nav>
+				<h2 class="visually-hidden" id="navigation-principal">Navigation principal</h2>
+				<ul class="nav">
+					<li class="nav-item"><a href="/rutadev/">Inicio</a></li>
+					<li class="nav-item"><a href="/rutadev/blog/">Archivo</a></li>
+					<li class="nav-item"><a href="/rutadev/about/">Sobre mí</a></li>
+					<li class="nav-item"><a href="/rutadev/feed/feed.xml">Feed</a></li>
+				</ul>
+			</nav>
+		</header>
+
+		<main id="main">
+			<heading-anchors>
+				
+
+
+<h1 id="pattern-matching-en-typescript-explicado-de-manera-sencilla">Pattern Matching en TypeScript - Explicado de manera sencilla</h1>
+
+<ul class="post-metadata">
+	<li><time datetime="2025-04-21">21 abril 2025</time></li>
+	<li><a href="/rutadev/tags/react/" class="post-tag">react</a>, </li>
+	<li><a href="/rutadev/tags/javascript/" class="post-tag">javascript</a>, </li>
+	<li><a href="/rutadev/tags/typescript/" class="post-tag">typescript</a>, </li>
+	<li><a href="/rutadev/tags/web/" class="post-tag">web</a></li>
+</ul>
+
+<h3></h3>
+<p><code>ts-pattern</code> es una librería de TypeScript para hacer pattern matching, una técnica que permite comparar estructuras de datos de manera elegante y segura. Facilita el manejo de datos complejos, eliminando muchos <code>if</code> y <code>switch</code> anidados.</p>
+<p>Con ts-pattern puedes:</p>
+<ul>
+<li>Escribir código más limpio y seguro.</li>
+<li>Evitar errores al olvidarte de manejar un caso específico.</li>
+<li>Tener mejor inferencia de tipos en TypeScript.</li>
+</ul>
+<h4 id="instalacion">Instalación</h4>
+<p>Para usar ts-pattern, primero instálalo en tu proyecto:</p>
+<pre class="language-bash" tabindex="0"><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> ts-pattern</code></pre>
+<p>También puedes usar yarn o pnpm:</p>
+<pre class="language-bash" tabindex="0"><code class="language-bash"><span class="token function">yarn</span> <span class="token function">add</span> ts-pattern</code></pre>
+<pre class="language-bash" tabindex="0"><code class="language-bash"><span class="token function">pnpm</span> <span class="token function">add</span> ts-pattern</code></pre>
+<h3 id="ejemplo-basico-reemplazando-un-switch">Ejemplo Básico: Reemplazando un switch</h3>
+<p>Supongamos que tenemos un estado en una aplicación:</p>
+<pre class="language-typescript" tabindex="0"><code class="language-typescript"><span class="token keyword">type</span> <span class="token class-name">Estado</span> <span class="token operator">=</span> <span class="token string">"cargando"</span> <span class="token operator">|</span> <span class="token string">"exito"</span> <span class="token operator">|</span> <span class="token string">"error"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> estado<span class="token operator">:</span> Estado <span class="token operator">=</span> <span class="token string">"exito"</span><span class="token punctuation">;</span></code></pre>
+<p>Con un switch tradicional:</p>
+<pre class="language-typescript" tabindex="0"><code class="language-typescript"><span class="token keyword">switch</span> <span class="token punctuation">(</span>estado<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">case</span> <span class="token string">"cargando"</span><span class="token operator">:</span>
+    <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Cargando datos..."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">break</span><span class="token punctuation">;</span>
+  <span class="token keyword">case</span> <span class="token string">"exito"</span><span class="token operator">:</span>
+    <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"¡Datos cargados con éxito!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">break</span><span class="token punctuation">;</span>
+  <span class="token keyword">case</span> <span class="token string">"error"</span><span class="token operator">:</span>
+    <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Hubo un error 😢"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">break</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>Con ts-pattern, el código es más limpio y seguro:</p>
+<pre class="language-typescript" tabindex="0"><code class="language-typescript"><span class="token keyword">import</span> <span class="token punctuation">{</span> match <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"ts-pattern"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> mensaje <span class="token operator">=</span> <span class="token function">match</span><span class="token punctuation">(</span>estado<span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token string">"cargando"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token string">"Cargando datos..."</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token string">"exito"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token string">"¡Datos cargados con éxito!"</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token string">"error"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token string">"Hubo un error 😢"</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">exhaustive</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Asegura que cubrimos todos los casos</span>
+
+<span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>mensaje<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>¿Qué hace este código?
+<code>match(estado)</code> compara el valor de <code>estado</code> con diferentes patrones (<code>&quot;cargando&quot;</code>, <code>&quot;exito&quot;</code>, <code>&quot;error&quot;</code>) y ejecuta la función correspondiente.</p>
+<p>Ventaja: Si olvidamos manejar un caso, ts-pattern nos avisa en tiempo de compilación.</p>
+<h3 id="ejemplo-con-objetos-manejo-de-errores">Ejemplo con Objetos: Manejo de Errores</h3>
+<p>Imagina que estás manejando respuestas de una API con diferentes formatos:</p>
+<pre class="language-typescript" tabindex="0"><code class="language-typescript"><span class="token keyword">type</span> <span class="token class-name">Respuesta</span> <span class="token operator">=</span>
+  <span class="token operator">|</span> <span class="token punctuation">{</span> tipo<span class="token operator">:</span> <span class="token string">"ok"</span><span class="token punctuation">,</span> data<span class="token operator">:</span> <span class="token builtin">string</span> <span class="token punctuation">}</span>
+  <span class="token operator">|</span> <span class="token punctuation">{</span> tipo<span class="token operator">:</span> <span class="token string">"error"</span><span class="token punctuation">,</span> mensaje<span class="token operator">:</span> <span class="token builtin">string</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> respuesta<span class="token operator">:</span> Respuesta <span class="token operator">=</span> <span class="token punctuation">{</span> tipo<span class="token operator">:</span> <span class="token string">"error"</span><span class="token punctuation">,</span> mensaje<span class="token operator">:</span> <span class="token string">"No encontrado"</span> <span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre>
+<p>Con un <code>if</code> tradicional:</p>
+<pre class="language-typescript" tabindex="0"><code class="language-typescript"><span class="token keyword">if</span> <span class="token punctuation">(</span>respuesta<span class="token punctuation">.</span>tipo <span class="token operator">===</span> <span class="token string">"ok"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Datos: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>respuesta<span class="token punctuation">.</span>data<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+  <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Error: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>respuesta<span class="token punctuation">.</span>mensaje<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>Con ts-pattern, el código es más elegante:</p>
+<pre class="language-typescript" tabindex="0"><code class="language-typescript"><span class="token keyword">const</span> resultado <span class="token operator">=</span> <span class="token function">match</span><span class="token punctuation">(</span>respuesta<span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> tipo<span class="token operator">:</span> <span class="token string">"ok"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>r<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Datos: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>r<span class="token punctuation">.</span>data<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> tipo<span class="token operator">:</span> <span class="token string">"error"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>r<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Error: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>r<span class="token punctuation">.</span>mensaje<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">exhaustive</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>resultado<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>¿Qué hace este código?
+Compara <code>respuesta</code> con los patrones <code>{ tipo: &quot;ok&quot; }</code> y <code>{ tipo: &quot;error&quot; }</code>.
+Accede a <code>r.data</code> o <code>r.mensaje</code> automáticamente sin necesidad de hacer un <code>if</code>.</p>
+<p>Ventaja: TypeScript infiere el tipo correctamente sin necesidad de hacer <code>as</code> o comprobaciones manuales.</p>
+<h4 id="uso-con-expresiones-regulares-o-rango-de-valores">Uso con Expresiones Regulares o Rango de Valores</h4>
+<p>También puedes hacer matching con números, rangos o expresiones regulares. Por ejemplo, clasificamos edades:</p>
+<pre class="language-typescript" tabindex="0"><code class="language-typescript"><span class="token keyword">const</span> edad <span class="token operator">=</span> <span class="token number">25</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> categoria <span class="token operator">=</span> <span class="token function">match</span><span class="token punctuation">(</span>edad<span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">when</span><span class="token punctuation">(</span>
+    <span class="token punctuation">(</span>e<span class="token punctuation">)</span> <span class="token operator">=></span> e <span class="token operator">&lt;</span> <span class="token number">18</span><span class="token punctuation">,</span>
+    <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token string">"Menor de edad"</span>
+  <span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">when</span><span class="token punctuation">(</span>
+    <span class="token punctuation">(</span>e<span class="token punctuation">)</span> <span class="token operator">=></span> e <span class="token operator">>=</span> <span class="token number">18</span> <span class="token operator">&amp;&amp;</span> e <span class="token operator">&lt;</span> <span class="token number">65</span><span class="token punctuation">,</span>
+    <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token string">"Adulto"</span>
+  <span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">when</span><span class="token punctuation">(</span>
+    <span class="token punctuation">(</span>e<span class="token punctuation">)</span> <span class="token operator">=></span> e <span class="token operator">>=</span> <span class="token number">65</span><span class="token punctuation">,</span>
+    <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token string">"Tercera edad"</span>
+  <span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">otherwise</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token string">"Desconocido"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>categoria<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// "Adulto"</span></code></pre>
+<p>¿Qué hace este código?
+Usa <code>.when()</code> para definir condiciones personalizadas.
+Usa <code>.otherwise()</code> como caso por defecto.</p>
+<p>Ventaja: Es más declarativo que usar múltiples <code>if</code>.</p>
+<h3 id="tipar-match">Tipar <code>match</code></h3>
+<p>Se puede tipar de forma segura gracias a TypeScript. Normalmente, TypeScript infiere los tipos automáticamente, pero si queremos asegurarnos de que solo acepte ciertos valores, podemos hacerlo manualmente.</p>
+<p>Hay dos formas principales de tiparlo:</p>
+<ol>
+<li><strong>Tipado automático (sin definir el tipo)</strong>
+Cuando pasamos un valor a match, TypeScript ya infiere el tipo:</li>
+</ol>
+<pre class="language-typescript" tabindex="0"><code class="language-typescript"><span class="token keyword">import</span> <span class="token punctuation">{</span> match <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"ts-pattern"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> estado <span class="token operator">=</span> <span class="token string">"cargando"</span> <span class="token keyword">as</span> <span class="token string">"cargando"</span> <span class="token operator">|</span> <span class="token string">"exito"</span> <span class="token operator">|</span> <span class="token string">"error"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> mensaje <span class="token operator">=</span> <span class="token function">match</span><span class="token punctuation">(</span>estado<span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token string">"cargando"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token string">"Cargando datos..."</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token string">"exito"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token string">"¡Datos cargados con éxito!"</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token string">"error"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token string">"Hubo un error 😢"</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">exhaustive</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>mensaje<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>¿Qué pasa aquí?
+Como <code>estado</code> está tipado como <code>&quot;cargando&quot; | &quot;exito&quot; | &quot;error&quot;</code>, TypeScript ya valida que match solo acepte esos valores.
+Si olvidamos un caso, TypeScript dará error con <code>.exhaustive()</code>.
+Ventaja: No necesitamos definir el tipo manualmente.</p>
+<ol start="2">
+<li><strong>Tipado explícito (definiendo el tipo)</strong>
+Si queremos ser más estrictos, podemos tipar manualmente <code>match</code> con <code>match&lt;Tipo&gt;()</code>:</li>
+</ol>
+<pre class="language-typescript" tabindex="0"><code class="language-typescript"><span class="token keyword">type</span> <span class="token class-name">Estado</span> <span class="token operator">=</span> <span class="token string">"cargando"</span> <span class="token operator">|</span> <span class="token string">"exito"</span> <span class="token operator">|</span> <span class="token string">"error"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> estado<span class="token operator">:</span> Estado <span class="token operator">=</span> <span class="token string">"exito"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> mensaje <span class="token operator">=</span> <span class="token generic-function"><span class="token function">match</span><span class="token generic class-name"><span class="token operator">&lt;</span>Estado<span class="token operator">></span></span></span><span class="token punctuation">(</span>estado<span class="token punctuation">)</span> <span class="token comment">// Aquí forzamos el tipo</span>
+  <span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token string">"cargando"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token string">"Cargando datos..."</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token string">"exito"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token string">"¡Datos cargados con éxito!"</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token string">"error"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token string">"Hubo un error 😢"</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">exhaustive</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>mensaje<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Ventaja: Si <code>estado</code> no tiene el tipo correcto, TypeScript mostrará error.</p>
+<ol start="3">
+<li><strong>Extra: Tipado en Objetos</strong>
+Cuando usamos objetos, también podemos tipar <code>match</code> para asegurar que todas las propiedades sean correctas.</li>
+</ol>
+<p>Ejemplo con un objeto <code>Respuesta</code>:</p>
+<pre class="language-typescript" tabindex="0"><code class="language-typescript"><span class="token keyword">type</span> <span class="token class-name">Respuesta</span> <span class="token operator">=</span>
+  <span class="token operator">|</span> <span class="token punctuation">{</span> tipo<span class="token operator">:</span> <span class="token string">"ok"</span><span class="token punctuation">;</span> data<span class="token operator">:</span> <span class="token builtin">string</span> <span class="token punctuation">}</span>
+  <span class="token operator">|</span> <span class="token punctuation">{</span> tipo<span class="token operator">:</span> <span class="token string">"error"</span><span class="token punctuation">;</span> mensaje<span class="token operator">:</span> <span class="token builtin">string</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> respuesta<span class="token operator">:</span> Respuesta <span class="token operator">=</span> <span class="token punctuation">{</span> tipo<span class="token operator">:</span> <span class="token string">"ok"</span><span class="token punctuation">,</span> data<span class="token operator">:</span> <span class="token string">"Hola"</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> resultado <span class="token operator">=</span> <span class="token generic-function"><span class="token function">match</span><span class="token generic class-name"><span class="token operator">&lt;</span>Respuesta<span class="token operator">></span></span></span><span class="token punctuation">(</span>respuesta<span class="token punctuation">)</span> <span class="token comment">// Tipamos aquí</span>
+  <span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> tipo<span class="token operator">:</span> <span class="token string">"ok"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>r<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Datos: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>r<span class="token punctuation">.</span>data<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> tipo<span class="token operator">:</span> <span class="token string">"error"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>r<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Error: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>r<span class="token punctuation">.</span>mensaje<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">exhaustive</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>resultado<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<h4 id="ventaja">Ventaja</h4>
+<ul>
+<li>TypeScript detecta automáticamente si olvidamos manejar un tipo de <code>Respuesta</code>.</li>
+<li><code>r</code> dentro de cada <code>.with()</code> ya tiene el tipo correcto (<code>r.data</code> o <code>r.mensaje</code>).</li>
+</ul>
+<h4 id="necesito-tipar-match">¿Necesito tipar <code>match</code>?</h4>
+<ul>
+<li>No siempre. TypeScript ya infiere los tipos en la mayoría de los casos.</li>
+<li>Si queremos asegurarnos, podemos usar <code>match&lt;Tipo&gt;()</code>.</li>
+<li>Lo mejor: <code>.exhaustive()</code> siempre verifica que no falte ningún caso.</li>
+</ul>
+
+<ul class="links-nextprev"><li class="links-nextprev-prev">← Previo<br> <a href="/rutadev/blog/multiples-configuraciones-control-versiones/">Gestionar configuraciones de Git para múltiples servicios (GIT)</a></li><li class="links-nextprev-next">Siguiente →<br><a href="/rutadev/blog/dominio-nic-cloudflare-gitpages/">Configurar un dominio de NIC.ar con Cloudflare y GitHub Pages</a></li>
+</ul>
+
+			</heading-anchors>
+		</main>
+
+		<footer class="site-footer">
+			<a target="_blank" href="https://pereyrapaula.com.ar">Paula Pereyra</a>
+			<em>Construido con <a href="https://www.11ty.dev/">Eleventy</a></em>
+		</footer>
+
+		<!-- This page `/blog/ts-pattern-react/` was built on 2026-03-28T03:51:27.257Z -->
+		<script type="module" src="/rutadev/dist/cC8wS6ZjFU.js"></script>
+	</body>
+</html>

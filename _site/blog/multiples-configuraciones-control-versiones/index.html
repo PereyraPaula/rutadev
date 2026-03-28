@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Gestionar configuraciones de Git para múltiples servicios (GIT)</title>
+		<meta name="description" content="Es un pequeño blog sobre desarrollo web, desarrollo android y servidores. Aquí comparto mis experiencias, aprendizajes y recursos útiles para otros desarrolladores que estén interesados en el mundo del desarrollo web.">
+		<link rel="alternate" href="/rutadev/feed/feed.xml" type="application/atom+xml" title="RutaDev">
+		
+		
+		
+		<style>/* This is an arbitrary CSS string added to the bundle */
+/* Defaults */
+@font-face {
+	font-family: 'IBMPlexSans';
+	font-style: normal;
+	font-weight: 400;
+	src:
+		local("IBMPlexSans"),
+		url("/fonts/IBMPlexSans-Variable.woff2") format("woff2");
+}
+
+:root {
+	--font-family: 'IBMPlexSans', -apple-system, system-ui, sans-serif;
+	--font-family-monospace: Consolas, Menlo, Monaco, Andale Mono WT, Andale Mono, Lucida Console, Lucida Sans Typewriter, DejaVu Sans Mono, Bitstream Vera Sans Mono, Liberation Mono, Nimbus Mono L, Courier New, Courier, monospace;
+}
+
+/* Theme colors */
+:root {
+	--color-gray-20: #e0e0e0;
+	--color-gray-50: #C0C0C0;
+	--color-gray-90: #333;
+
+	--background-color: #fff;
+
+	--text-color: var(--color-gray-90);
+	--text-color-link: #1493fb;
+	--text-color-link-active: #0359a0;
+	--text-color-link-visited: #035598;
+
+	--syntax-tab-size: 2;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-gray-20: #e0e0e0;
+		--color-gray-50: #C0C0C0;
+		--color-gray-90: #dad8d8;
+
+		/* --text-color is assigned to --color-gray-_ above */
+		--text-color-link: #1493fb;
+		--text-color-link-active: #0359a0;
+		--text-color-link-visited: #dad8d8;
+
+		--background-color: #15202b;
+	}
+}
+
+
+/* Global stylesheet */
+* {
+	box-sizing: border-box;
+}
+
+@view-transition {
+	navigation: auto;
+}
+
+html,
+body {
+	padding: 0;
+	margin: 0 auto;
+	font-family: var(--font-family);
+	color: var(--text-color);
+	background-color: var(--background-color);
+}
+
+html {
+	overflow-y: scroll;
+}
+
+body {
+	max-width: 40em;
+}
+
+/* https://www.a11yproject.com/posts/how-to-hide-content/ */
+.visually-hidden:not(:focus):not(:active) {
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
+/* Fluid images via https://www.zachleat.com/web/fluid-images/ */
+img {
+	max-width: 100%;
+}
+
+img[width][height] {
+	height: auto;
+}
+
+img[src$=".svg"] {
+	width: 100%;
+	height: auto;
+	max-width: none;
+}
+
+video,
+iframe {
+	width: 100%;
+	height: auto;
+}
+
+iframe {
+	aspect-ratio: 16/9;
+}
+
+p:last-child {
+	margin-bottom: 0;
+}
+
+p {
+	line-height: 1.5;
+}
+
+li {
+	line-height: 1.5;
+}
+
+a[href] {
+	color: var(--text-color-link);
+}
+
+a[href]:visited {
+	color: var(--text-color-link-visited);
+}
+
+a[href]:hover,
+a[href]:active {
+	color: var(--text-color-link-active);
+}
+
+main,
+footer {
+	padding: 1rem;
+}
+
+.site-footer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 1em;
+}
+
+main :first-child {
+	margin-top: 0;
+}
+
+header {
+	border-bottom: 1px dashed var(--color-gray-20);
+}
+
+#skip-link {
+	text-decoration: none;
+	background: var(--background-color);
+	color: var(--text-color);
+	padding: 0.5rem 1rem;
+	border: 1px solid var(--color-gray-90);
+	border-radius: 2px;
+}
+
+/* Prevent visually-hidden skip link fom pushing content around when focused */
+#skip-link.visually-hidden:focus {
+	position: absolute;
+	top: 1rem;
+	left: 1rem;
+	/* Ensure it is positioned on top of everything else when it is shown */
+	z-index: 999;
+}
+
+.links-nextprev {
+	display: flex;
+	justify-content: space-between;
+	gap: .5em 1em;
+	list-style: "";
+	border-top: 1px dashed var(--color-gray-20);
+	padding: 1em 0;
+}
+
+.links-nextprev>* {
+	flex-grow: 1;
+}
+
+.links-nextprev-next {
+	text-align: right;
+}
+
+table {
+	margin: 1em 0;
+}
+
+table td,
+table th {
+	padding-right: 1em;
+}
+
+pre,
+code {
+	font-family: var(--font-family-monospace);
+}
+
+pre:not([class*="language-"]) {
+	margin: .5em 0;
+	line-height: 1.375;
+	/* 22px /16 */
+	-moz-tab-size: var(--syntax-tab-size);
+	-o-tab-size: var(--syntax-tab-size);
+	tab-size: var(--syntax-tab-size);
+	-webkit-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+	direction: ltr;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	overflow-x: auto;
+}
+
+code {
+	word-break: break-all;
+}
+
+/* Header */
+header {
+	display: flex;
+	gap: 1em;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+	padding: 1em;
+}
+
+.home-link {
+	flex-grow: 1;
+	font-size: 1em;
+	/* 16px /16 */
+	font-weight: 700;
+}
+
+.home-link:link:not(:hover) {
+	text-decoration: none;
+}
+
+/* Nav */
+.nav {
+	display: flex;
+	gap: .5em 1em;
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+
+.nav-item {
+	display: inline-block;
+}
+
+.nav-item a[href]:not(:hover) {
+	text-decoration: none;
+}
+
+.nav a[href][aria-current="page"] {
+	text-decoration: underline;
+}
+
+/* Posts list */
+.postlist {
+	counter-reset: start-from var(--postlist-index);
+	list-style: none;
+	padding: 0;
+	padding-left: 1.5rem;
+}
+
+.postlist-item {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	counter-increment: start-from -1;
+	margin-bottom: 1em;
+}
+
+.postlist-item:before {
+	display: inline-block;
+	pointer-events: none;
+	content: "" counter(start-from, decimal-leading-zero) ". ";
+	line-height: 100%;
+	text-align: right;
+	margin-left: -1.5rem;
+}
+
+.postlist-date,
+.postlist-item:before {
+	font-size: 0.8125em;
+	/* 13px /16 */
+	color: var(--color-gray-90);
+}
+
+.postlist-date {
+	word-spacing: -0.5px;
+}
+
+.postlist-link {
+	font-size: 1.1875em;
+	/* 19px /16 */
+	font-weight: 700;
+	flex-basis: calc(100% - 1.5rem);
+	padding-left: .25em;
+	padding-right: .5em;
+	text-underline-position: from-font;
+	text-underline-offset: 0;
+	text-decoration-thickness: 1px;
+}
+
+.postlist-item-active .postlist-link {
+	font-weight: bold;
+}
+
+/* Tags */
+.post-tag {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	text-transform: capitalize;
+	font-style: italic;
+}
+
+.postlist-item>.post-tag {
+	align-self: center;
+}
+
+/* Tags list */
+.post-metadata {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: .5em;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.post-metadata time {
+	margin-right: 1em;
+}
+
+div table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 1em 0;
+	font-family: Arial, sans-serif;
+}
+
+div table th,
+div table td {
+	border: 1px solid #dddddd20;
+	padding: 8px 12px;
+	text-align: left;
+}
+
+div table th {
+	background-color: #f2f2f220;
+	font-weight: bold;
+}
+
+div table tr:nth-child(even) {
+	background-color: #f9f9f910;
+}
+
+div table tr:hover {
+	background-color: #f1f1f107;
+}
+/**
+ * okaidia theme for JavaScript, CSS and HTML
+ * Loosely based on Monokai textmate theme by http://www.monokai.nl/
+ * @author ocodia
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+	color: #f8f8f2;
+	background: none;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	font-size: 1em;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+	line-height: 1.5;
+
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+	padding: 1em;
+	margin: .5em 0;
+	overflow: auto;
+	border-radius: 0.3em;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+	background: #272822;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+	padding: .1em;
+	border-radius: .3em;
+	white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+	color: #8292a2;
+}
+
+.token.punctuation {
+	color: #f8f8f2;
+}
+
+.token.namespace {
+	opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+	color: #f92672;
+}
+
+.token.boolean,
+.token.number {
+	color: #ae81ff;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+	color: #a6e22e;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+	color: #f8f8f2;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.function,
+.token.class-name {
+	color: #e6db74;
+}
+
+.token.keyword {
+	color: #66d9ef;
+}
+
+.token.regex,
+.token.important {
+	color: #fd971f;
+}
+
+.token.important,
+.token.bold {
+	font-weight: bold;
+}
+.token.italic {
+	font-style: italic;
+}
+
+.token.entity {
+	cursor: help;
+}
+/*
+ * New diff- syntax
+ */
+
+pre[class*="language-diff-"] {
+	--eleventy-code-padding: 1.25em;
+	padding-left: var(--eleventy-code-padding);
+	padding-right: var(--eleventy-code-padding);
+}
+.token.deleted {
+	background-color: hsl(0, 51%, 37%);
+	color: inherit;
+}
+.token.inserted {
+	background-color: hsl(126, 31%, 39%);
+	color: inherit;
+}
+
+/* Make the + and - characters unselectable for copy/paste */
+.token.prefix.unchanged,
+.token.prefix.inserted,
+.token.prefix.deleted {
+	-webkit-user-select: none;
+	user-select: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+.token.prefix.inserted,
+.token.prefix.deleted {
+	width: var(--eleventy-code-padding);
+	background-color: rgba(0,0,0,.2);
+}
+
+/* Optional: full-width background color */
+.token.inserted:not(.prefix),
+.token.deleted:not(.prefix) {
+	display: block;
+	margin-left: calc(-1 * var(--eleventy-code-padding));
+	margin-right: calc(-1 * var(--eleventy-code-padding));
+	text-decoration: none; /* override del, ins, mark defaults */
+	color: inherit; /* override del, ins, mark defaults */
+}</style>
+		
+	</head>
+	<body>
+		<a href="#main" id="skip-link" class="visually-hidden">Saltar al contenido principal</a>
+
+		<header>
+			<a href="/rutadev/" class="home-link">RutaDev</a>
+			<nav>
+				<h2 class="visually-hidden" id="navigation-principal">Navigation principal</h2>
+				<ul class="nav">
+					<li class="nav-item"><a href="/rutadev/">Inicio</a></li>
+					<li class="nav-item"><a href="/rutadev/blog/">Archivo</a></li>
+					<li class="nav-item"><a href="/rutadev/about/">Sobre mí</a></li>
+					<li class="nav-item"><a href="/rutadev/feed/feed.xml">Feed</a></li>
+				</ul>
+			</nav>
+		</header>
+
+		<main id="main">
+			<heading-anchors>
+				
+
+
+<h1 id="gestionar-configuraciones-de-git-para-multiples-servicios-git">Gestionar configuraciones de Git para múltiples servicios (GIT)</h1>
+
+<ul class="post-metadata">
+	<li><time datetime="2025-01-07">07 enero 2025</time></li>
+	<li><a href="/rutadev/tags/git/" class="post-tag">git</a>, </li>
+	<li><a href="/rutadev/tags/github/" class="post-tag">github</a></li>
+</ul>
+
+<p>Este blog nació de mi necesidad de organizar las configuraciones de los servicios de control de versiones que utilizo:</p>
+<ul>
+<li><strong>GitLab</strong> para el trabajo,</li>
+<li><strong>GitHub</strong> para proyectos personales que quiero compartir,</li>
+<li><strong>Gogs</strong> (inicialmente como prueba, pero terminó siendo mi espacio para guardar configuraciones y backups privados junto a un familiar).</li>
+</ul>
+<p>Separar cada servicio es clave para evitar confusiones y errores al realizar modificaciones.</p>
+<hr>
+<h4 id="1-un-solo-servicio"><strong>1. Un solo servicio</strong></h4>
+<p>Si solo usas un servicio, configura tus credenciales globales:</p>
+<pre class="language-bash" tabindex="0"><code class="language-bash"><span class="token function">git</span> config <span class="token parameter variable">--global</span> user.name <span class="token string">"Tu Nombre"</span>
+<span class="token function">git</span> config <span class="token parameter variable">--global</span> user.email <span class="token string">"tu.email@ejemplo.com"</span></code></pre>
+<p>Estos valores se aplicarán a todos los repositorios.</p>
+<hr>
+<h4 id="2-multiples-servicios"><strong>2. Múltiples servicios</strong></h4>
+<h5 id="opcion-1-configuracion-por-repositorio"><strong>Opción 1: Configuración por repositorio</strong></h5>
+<p>Para cada repositorio, establece credenciales específicas:</p>
+<pre class="language-bash" tabindex="0"><code class="language-bash"><span class="token builtin class-name">cd</span> /ruta/a/tu/repositorio
+<span class="token function">git</span> config user.name <span class="token string">"Tu Nombre para Gogs"</span>
+<span class="token function">git</span> config user.email <span class="token string">"tu.email@gogs.com"</span></code></pre>
+<p><strong>Configura el remoto correctamente</strong>:</p>
+<pre class="language-bash" tabindex="0"><code class="language-bash"><span class="token function">git</span> remote <span class="token function">add</span> origin https://gogs.ejemplo.com/usuario/repositorio.git
+<span class="token comment"># o para GitHub/GitLab:</span>
+<span class="token function">git</span> remote <span class="token function">add</span> origin https://github.com/usuario/repositorio.git</code></pre>
+<hr>
+<h5 id="opcion-2-uso-de-ssh-recomendado"><strong>Opción 2: Uso de SSH (recomendado)</strong></h5>
+<ol>
+<li>
+<p><strong>Genera claves SSH</strong> (si no las tienes):</p>
+<pre class="language-bash" tabindex="0"><code class="language-bash">ssh-keygen <span class="token parameter variable">-t</span> rsa <span class="token parameter variable">-b</span> <span class="token number">4096</span> <span class="token parameter variable">-C</span> <span class="token string">"tu.email@ejemplo.com"</span></code></pre>
+</li>
+<li>
+<p><strong>Agrega las claves al agente SSH</strong>:</p>
+<pre class="language-bash" tabindex="0"><code class="language-bash"><span class="token builtin class-name">eval</span> <span class="token string">"<span class="token variable"><span class="token variable">$(</span>ssh-agent <span class="token parameter variable">-s</span><span class="token variable">)</span></span>"</span>
+ssh-add ~/.ssh/id_rsa_gogs
+ssh-add ~/.ssh/id_rsa_github
+ssh-add ~/.ssh/id_rsa_gitlab</code></pre>
+</li>
+<li>
+<p><strong>Configura <code>~/.ssh/config</code></strong>:</p>
+<pre class="language-bash" tabindex="0"><code class="language-bash"><span class="token comment"># Gogs</span>
+Host gogs
+    HostName gogs.ejemplo.com
+    User <span class="token function">git</span>
+    IdentityFile ~/.ssh/id_rsa_gogs
+
+<span class="token comment"># GitHub</span>
+Host github
+    HostName github.com
+    User <span class="token function">git</span>
+    IdentityFile ~/.ssh/id_rsa_github
+
+<span class="token comment"># GitLab</span>
+Host gitlab
+    HostName gitlab.com
+    User <span class="token function">git</span>
+    IdentityFile ~/.ssh/id_rsa_gitlab</code></pre>
+</li>
+<li>
+<p><strong>Usa URLs SSH para los remotos</strong>:</p>
+<pre class="language-bash" tabindex="0"><code class="language-bash"><span class="token function">git</span> remote <span class="token function">add</span> origin gogs:usuario/repositorio.git
+<span class="token function">git</span> remote <span class="token function">add</span> origin github:usuario/repositorio.git
+<span class="token function">git</span> remote <span class="token function">add</span> origin gitlab:usuario/repositorio.git</code></pre>
+</li>
+</ol>
+<hr>
+<h4 id="bonus-credenciales-temporales"><strong>Bonus: Credenciales temporales</strong></h4>
+<p>Si necesitas colaborar en un repositorio ajeno sin modificar tu configuración global, usa la URL con credenciales:</p>
+<pre class="language-bash" tabindex="0"><code class="language-bash"><span class="token function">git</span> remote set-url origin https://username:token@github.com/usuario/repositorio.git</code></pre>
+<p><em>(Reemplaza <code>token</code> por un <a href="https://docs.github.com/es/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic">Personal Access Token</a> con permisos de <code>repo</code>)</em></p>
+<p><strong>Nota</strong>: Verifica siempre el directorio y la configuración antes de ejecutar comandos.</p>
+
+<ul class="links-nextprev"><li class="links-nextprev-prev">← Previo<br> <a href="/rutadev/blog/npm-link/">Desarrollo local de módulos Node.js con npm link</a></li><li class="links-nextprev-next">Siguiente →<br><a href="/rutadev/blog/ts-pattern-react/">Pattern Matching en TypeScript - Explicado de manera sencilla</a></li>
+</ul>
+
+			</heading-anchors>
+		</main>
+
+		<footer class="site-footer">
+			<a target="_blank" href="https://pereyrapaula.com.ar">Paula Pereyra</a>
+			<em>Construido con <a href="https://www.11ty.dev/">Eleventy</a></em>
+		</footer>
+
+		<!-- This page `/blog/multiples-configuraciones-control-versiones/` was built on 2026-03-28T03:51:27.256Z -->
+		<script type="module" src="/rutadev/dist/cC8wS6ZjFU.js"></script>
+	</body>
+</html>

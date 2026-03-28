@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet href="pretty-atom-feed.xsl" type="text/xsl"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="es">
+  
+  <title>RutaDev</title>
+  <subtitle>Es un pequeño blog sobre desarrollo web, desarrollo android y servidores. Aquí comparto mis experiencias, aprendizajes y recursos útiles para otros desarrolladores que estén interesados en el mundo del desarrollo web.</subtitle>
+  <link href="https://example.com/rutadev/feed/feed.xml" rel="self" />
+  <link href="https://example.com/rutadev/" />
+  <updated>2026-03-25T00:00:00Z</updated>
+  <id>https://example.com/rutadev/</id>
+  <author>
+    <name>Paula Pereyra</name>
+  </author>
+  <entry>
+    <title>Configurar un dominio de NIC.ar con Cloudflare y GitHub Pages</title>
+    <link href="https://example.com/rutadev/blog/dominio-nic-cloudflare-gitpages/" />
+    <updated>2026-03-25T00:00:00Z</updated>
+    <id>https://example.com/rutadev/blog/dominio-nic-cloudflare-gitpages/</id>
+    <content type="html">&lt;p&gt;Si tienes un dominio registrado en NIC.ar y quieres usarlo para tu sitio en GitHub Pages, aquí te dejo los pasos clave para hacerlo sin complicaciones, usando Cloudflare como intermediario. Aunque el proceso es sencillo, no siempre hay información clara sobre cómo hacerlo específicamente con dominios argentinos.&lt;/p&gt;
+&lt;h4 id=&quot;resumen-del-proceso&quot;&gt;&lt;strong&gt;Resumen del proceso&lt;/strong&gt;&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;Compra el dominio en NIC.ar.&lt;/li&gt;
+&lt;li&gt;Delega los DNS a Cloudflare.&lt;/li&gt;
+&lt;li&gt;Configura los registros DNS en Cloudflare para apuntar a GitHub Pages.&lt;/li&gt;
+&lt;li&gt;Asocia el dominio en tu repositorio de GitHub.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&quot;paso-a-paso&quot;&gt;&lt;strong&gt;Paso a paso&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;1. Agregar el dominio a Cloudflare:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Ingresa a tu cuenta de &lt;a href=&quot;https://www.cloudflare.com/&quot;&gt;Cloudflare&lt;/a&gt; y haz clic en &lt;strong&gt;&amp;quot;Add site&amp;quot;&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;Escribe tu dominio (por ejemplo, &lt;code&gt;tusitio.com.ar&lt;/code&gt;) y selecciona el plan gratuito.&lt;/li&gt;
+&lt;li&gt;Cloudflare te pedirá que elijas cómo importar los registros DNS. Selecciona la opción: &lt;strong&gt;&amp;quot;Introducir manualmente registros DNS&amp;quot;&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;Se abrirá una tabla para configurar los registros DNS. Aquí debes agregar los siguientes registros:
+&lt;br&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;2. Configurar los registros DNS en Cloudflare&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Registros para el dominio raíz (apuntan a GitHub Pages).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Agrega &lt;em&gt;4 registros de tipo A&lt;/em&gt; con las siguientes IP de GitHub:&lt;/p&gt;
+&lt;div class=&quot;&quot;&gt;&lt;table class=&quot;&quot;&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Tipo&lt;/th&gt;
+&lt;th&gt;Nombre&lt;/th&gt;
+&lt;th&gt;IP&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;A&lt;/td&gt;
+&lt;td&gt;@&lt;/td&gt;
+&lt;td&gt;185.199.108.153&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;A&lt;/td&gt;
+&lt;td&gt;@&lt;/td&gt;
+&lt;td&gt;185.199.109.153&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;A&lt;/td&gt;
+&lt;td&gt;@&lt;/td&gt;
+&lt;td&gt;185.199.110.153&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;A&lt;/td&gt;
+&lt;td&gt;@&lt;/td&gt;
+&lt;td&gt;185.199.111.153&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Registro para el subdominio &lt;code&gt;www&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Agrega &lt;em&gt;1 registro de tipo CNAME&lt;/em&gt;:&lt;/p&gt;
+&lt;div class=&quot;&quot;&gt;&lt;table class=&quot;&quot;&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Tipo&lt;/th&gt;
+&lt;th&gt;Nombre&lt;/th&gt;
+&lt;th&gt;Valor&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;CNAME&lt;/td&gt;
+&lt;td&gt;www&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;tuusuario.github.io&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;Importante:&lt;/em&gt; En cada registro, verás un ícono de nube (☁️). Si está en &lt;em&gt;naranja&lt;/em&gt;, significa que el proxy de Cloudflare está activado. &lt;strong&gt;Desactívalo&lt;/strong&gt; (debe quedar en gris) para evitar problemas de configuración inicial. Se puede activar después de que los DNS se propaguen.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Guarda los cambios. Luego Cloudflare te proporcionará &lt;em&gt;dos nameservers&lt;/em&gt;. Copia estos valores. &lt;br&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;3. Delegar los DNS en NIC.ar&lt;/strong&gt;&lt;br&gt;
+A. Inicia sesión en tu cuenta de &lt;a href=&quot;https://nic.ar/&quot;&gt;NIC.ar&lt;/a&gt;.&lt;br&gt;
+B. Ve a la sección de gestión de tu dominio y busca la opción para &lt;strong&gt;cambiar los nameservers&lt;/strong&gt;.&lt;br&gt;
+C. Pega los dos nameservers que copiaste de Cloudflare.&lt;br&gt;
+D. Guarda los cambios. &lt;br&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;Nota:&lt;/em&gt; La propagación de los DNS puede tardar entre &lt;strong&gt;30 minutos y 48 horas&lt;/strong&gt;. Puedes verificar el estado de la propagación usando herramientas como &lt;a href=&quot;https://dnschecker.org/&quot;&gt;DNS Checker&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Pattern Matching en TypeScript - Explicado de manera sencilla</title>
+    <link href="https://example.com/rutadev/blog/ts-pattern-react/" />
+    <updated>2025-04-21T00:00:00Z</updated>
+    <id>https://example.com/rutadev/blog/ts-pattern-react/</id>
+    <content type="html">&lt;h3&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;ts-pattern&lt;/code&gt; es una librería de TypeScript para hacer pattern matching, una técnica que permite comparar estructuras de datos de manera elegante y segura. Facilita el manejo de datos complejos, eliminando muchos &lt;code&gt;if&lt;/code&gt; y &lt;code&gt;switch&lt;/code&gt; anidados.&lt;/p&gt;
+&lt;p&gt;Con ts-pattern puedes:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Escribir código más limpio y seguro.&lt;/li&gt;
+&lt;li&gt;Evitar errores al olvidarte de manejar un caso específico.&lt;/li&gt;
+&lt;li&gt;Tener mejor inferencia de tipos en TypeScript.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&quot;instalacion&quot;&gt;Instalación&lt;/h4&gt;
+&lt;p&gt;Para usar ts-pattern, primero instálalo en tu proyecto:&lt;/p&gt;
+&lt;pre class=&quot;language-bash&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token function&quot;&gt;npm&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; ts-pattern&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;También puedes usar yarn o pnpm:&lt;/p&gt;
+&lt;pre class=&quot;language-bash&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token function&quot;&gt;yarn&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;add&lt;/span&gt; ts-pattern&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&quot;language-bash&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token function&quot;&gt;pnpm&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;add&lt;/span&gt; ts-pattern&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&quot;ejemplo-basico-reemplazando-un-switch&quot;&gt;Ejemplo Básico: Reemplazando un switch&lt;/h3&gt;
+&lt;p&gt;Supongamos que tenemos un estado en una aplicación:&lt;/p&gt;
+&lt;pre class=&quot;language-typescript&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-typescript&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Estado&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;cargando&quot;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;exito&quot;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;error&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; estado&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; Estado &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;exito&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Con un switch tradicional:&lt;/p&gt;
+&lt;pre class=&quot;language-typescript&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-typescript&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;switch&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;estado&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;cargando&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token builtin&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;Cargando datos...&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;exito&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token builtin&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;¡Datos cargados con éxito!&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;error&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token builtin&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;Hubo un error 😢&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Con ts-pattern, el código es más limpio y seguro:&lt;/p&gt;
+&lt;pre class=&quot;language-typescript&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-typescript&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; match &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;ts-pattern&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; mensaje &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;match&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;estado&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;cargando&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;Cargando datos...&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;exito&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;¡Datos cargados con éxito!&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;error&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;Hubo un error 😢&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;exhaustive&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// Asegura que cubrimos todos los casos&lt;/span&gt;
+
+&lt;span class=&quot;token builtin&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;mensaje&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;¿Qué hace este código?
+&lt;code&gt;match(estado)&lt;/code&gt; compara el valor de &lt;code&gt;estado&lt;/code&gt; con diferentes patrones (&lt;code&gt;&amp;quot;cargando&amp;quot;&lt;/code&gt;, &lt;code&gt;&amp;quot;exito&amp;quot;&lt;/code&gt;, &lt;code&gt;&amp;quot;error&amp;quot;&lt;/code&gt;) y ejecuta la función correspondiente.&lt;/p&gt;
+&lt;p&gt;Ventaja: Si olvidamos manejar un caso, ts-pattern nos avisa en tiempo de compilación.&lt;/p&gt;
+&lt;h3 id=&quot;ejemplo-con-objetos-manejo-de-errores&quot;&gt;Ejemplo con Objetos: Manejo de Errores&lt;/h3&gt;
+&lt;p&gt;Imagina que estás manejando respuestas de una API con diferentes formatos:&lt;/p&gt;
+&lt;pre class=&quot;language-typescript&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-typescript&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Respuesta&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;
+  &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; tipo&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;ok&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; data&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; tipo&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;error&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; mensaje&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; respuesta&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; Respuesta &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; tipo&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;error&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; mensaje&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;No encontrado&quot;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Con un &lt;code&gt;if&lt;/code&gt; tradicional:&lt;/p&gt;
+&lt;pre class=&quot;language-typescript&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-typescript&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;respuesta&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;tipo &lt;span class=&quot;token operator&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;ok&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token builtin&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token template-string&quot;&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;Datos: &lt;/span&gt;&lt;span class=&quot;token interpolation&quot;&gt;&lt;span class=&quot;token interpolation-punctuation punctuation&quot;&gt;${&lt;/span&gt;respuesta&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;data&lt;span class=&quot;token interpolation-punctuation punctuation&quot;&gt;}&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token builtin&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token template-string&quot;&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;Error: &lt;/span&gt;&lt;span class=&quot;token interpolation&quot;&gt;&lt;span class=&quot;token interpolation-punctuation punctuation&quot;&gt;${&lt;/span&gt;respuesta&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;mensaje&lt;span class=&quot;token interpolation-punctuation punctuation&quot;&gt;}&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Con ts-pattern, el código es más elegante:&lt;/p&gt;
+&lt;pre class=&quot;language-typescript&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-typescript&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; resultado &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;match&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;respuesta&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; tipo&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;ok&quot;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;r&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token template-string&quot;&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;Datos: &lt;/span&gt;&lt;span class=&quot;token interpolation&quot;&gt;&lt;span class=&quot;token interpolation-punctuation punctuation&quot;&gt;${&lt;/span&gt;r&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;data&lt;span class=&quot;token interpolation-punctuation punctuation&quot;&gt;}&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; tipo&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;error&quot;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;r&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token template-string&quot;&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;Error: &lt;/span&gt;&lt;span class=&quot;token interpolation&quot;&gt;&lt;span class=&quot;token interpolation-punctuation punctuation&quot;&gt;${&lt;/span&gt;r&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;mensaje&lt;span class=&quot;token interpolation-punctuation punctuation&quot;&gt;}&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;exhaustive&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token builtin&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;resultado&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;¿Qué hace este código?
+Compara &lt;code&gt;respuesta&lt;/code&gt; con los patrones &lt;code&gt;{ tipo: &amp;quot;ok&amp;quot; }&lt;/code&gt; y &lt;code&gt;{ tipo: &amp;quot;error&amp;quot; }&lt;/code&gt;.
+Accede a &lt;code&gt;r.data&lt;/code&gt; o &lt;code&gt;r.mensaje&lt;/code&gt; automáticamente sin necesidad de hacer un &lt;code&gt;if&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Ventaja: TypeScript infiere el tipo correctamente sin necesidad de hacer &lt;code&gt;as&lt;/code&gt; o comprobaciones manuales.&lt;/p&gt;
+&lt;h4 id=&quot;uso-con-expresiones-regulares-o-rango-de-valores&quot;&gt;Uso con Expresiones Regulares o Rango de Valores&lt;/h4&gt;
+&lt;p&gt;También puedes hacer matching con números, rangos o expresiones regulares. Por ejemplo, clasificamos edades:&lt;/p&gt;
+&lt;pre class=&quot;language-typescript&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-typescript&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; edad &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;25&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; categoria &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;match&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;edad&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;when&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;e&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; e &lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;18&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;Menor de edad&quot;&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;when&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;e&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; e &lt;span class=&quot;token operator&quot;&gt;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;18&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; e &lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;65&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;Adulto&quot;&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;when&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;e&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; e &lt;span class=&quot;token operator&quot;&gt;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;65&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;Tercera edad&quot;&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;otherwise&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;Desconocido&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token builtin&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;categoria&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// &quot;Adulto&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;¿Qué hace este código?
+Usa &lt;code&gt;.when()&lt;/code&gt; para definir condiciones personalizadas.
+Usa &lt;code&gt;.otherwise()&lt;/code&gt; como caso por defecto.&lt;/p&gt;
+&lt;p&gt;Ventaja: Es más declarativo que usar múltiples &lt;code&gt;if&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 id=&quot;tipar-match&quot;&gt;Tipar &lt;code&gt;match&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;Se puede tipar de forma segura gracias a TypeScript. Normalmente, TypeScript infiere los tipos automáticamente, pero si queremos asegurarnos de que solo acepte ciertos valores, podemos hacerlo manualmente.&lt;/p&gt;
+&lt;p&gt;Hay dos formas principales de tiparlo:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Tipado automático (sin definir el tipo)&lt;/strong&gt;
+Cuando pasamos un valor a match, TypeScript ya infiere el tipo:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&quot;language-typescript&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-typescript&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; match &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;ts-pattern&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; estado &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;cargando&quot;&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;cargando&quot;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;exito&quot;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;error&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; mensaje &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;match&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;estado&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;cargando&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;Cargando datos...&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;exito&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;¡Datos cargados con éxito!&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;error&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;Hubo un error 😢&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;exhaustive&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token builtin&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;mensaje&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;¿Qué pasa aquí?
+Como &lt;code&gt;estado&lt;/code&gt; está tipado como &lt;code&gt;&amp;quot;cargando&amp;quot; | &amp;quot;exito&amp;quot; | &amp;quot;error&amp;quot;&lt;/code&gt;, TypeScript ya valida que match solo acepte esos valores.
+Si olvidamos un caso, TypeScript dará error con &lt;code&gt;.exhaustive()&lt;/code&gt;.
+Ventaja: No necesitamos definir el tipo manualmente.&lt;/p&gt;
+&lt;ol start=&quot;2&quot;&gt;
+&lt;li&gt;&lt;strong&gt;Tipado explícito (definiendo el tipo)&lt;/strong&gt;
+Si queremos ser más estrictos, podemos tipar manualmente &lt;code&gt;match&lt;/code&gt; con &lt;code&gt;match&amp;lt;Tipo&amp;gt;()&lt;/code&gt;:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&quot;language-typescript&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-typescript&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Estado&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;cargando&quot;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;exito&quot;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;error&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; estado&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; Estado &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;exito&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; mensaje &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token generic-function&quot;&gt;&lt;span class=&quot;token function&quot;&gt;match&lt;/span&gt;&lt;span class=&quot;token generic class-name&quot;&gt;&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;Estado&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;estado&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// Aquí forzamos el tipo&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;cargando&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;Cargando datos...&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;exito&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;¡Datos cargados con éxito!&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;error&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;Hubo un error 😢&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;exhaustive&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token builtin&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;mensaje&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Ventaja: Si &lt;code&gt;estado&lt;/code&gt; no tiene el tipo correcto, TypeScript mostrará error.&lt;/p&gt;
+&lt;ol start=&quot;3&quot;&gt;
+&lt;li&gt;&lt;strong&gt;Extra: Tipado en Objetos&lt;/strong&gt;
+Cuando usamos objetos, también podemos tipar &lt;code&gt;match&lt;/code&gt; para asegurar que todas las propiedades sean correctas.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Ejemplo con un objeto &lt;code&gt;Respuesta&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class=&quot;language-typescript&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-typescript&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Respuesta&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;
+  &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; tipo&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;ok&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; data&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; tipo&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;error&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; mensaje&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; respuesta&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; Respuesta &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; tipo&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;ok&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; data&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;Hola&quot;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; resultado &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token generic-function&quot;&gt;&lt;span class=&quot;token function&quot;&gt;match&lt;/span&gt;&lt;span class=&quot;token generic class-name&quot;&gt;&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;Respuesta&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;respuesta&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// Tipamos aquí&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; tipo&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;ok&quot;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;r&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token template-string&quot;&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;Datos: &lt;/span&gt;&lt;span class=&quot;token interpolation&quot;&gt;&lt;span class=&quot;token interpolation-punctuation punctuation&quot;&gt;${&lt;/span&gt;r&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;data&lt;span class=&quot;token interpolation-punctuation punctuation&quot;&gt;}&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; tipo&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;error&quot;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;r&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token template-string&quot;&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;Error: &lt;/span&gt;&lt;span class=&quot;token interpolation&quot;&gt;&lt;span class=&quot;token interpolation-punctuation punctuation&quot;&gt;${&lt;/span&gt;r&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;mensaje&lt;span class=&quot;token interpolation-punctuation punctuation&quot;&gt;}&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token template-punctuation string&quot;&gt;`&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;exhaustive&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token builtin&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;resultado&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&quot;ventaja&quot;&gt;Ventaja&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;TypeScript detecta automáticamente si olvidamos manejar un tipo de &lt;code&gt;Respuesta&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;r&lt;/code&gt; dentro de cada &lt;code&gt;.with()&lt;/code&gt; ya tiene el tipo correcto (&lt;code&gt;r.data&lt;/code&gt; o &lt;code&gt;r.mensaje&lt;/code&gt;).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&quot;necesito-tipar-match&quot;&gt;¿Necesito tipar &lt;code&gt;match&lt;/code&gt;?&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;No siempre. TypeScript ya infiere los tipos en la mayoría de los casos.&lt;/li&gt;
+&lt;li&gt;Si queremos asegurarnos, podemos usar &lt;code&gt;match&amp;lt;Tipo&amp;gt;()&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Lo mejor: &lt;code&gt;.exhaustive()&lt;/code&gt; siempre verifica que no falte ningún caso.&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Gestionar configuraciones de Git para múltiples servicios (GIT)</title>
+    <link href="https://example.com/rutadev/blog/multiples-configuraciones-control-versiones/" />
+    <updated>2025-01-07T00:00:00Z</updated>
+    <id>https://example.com/rutadev/blog/multiples-configuraciones-control-versiones/</id>
+    <content type="html">&lt;p&gt;Este blog nació de mi necesidad de organizar las configuraciones de los servicios de control de versiones que utilizo:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;GitLab&lt;/strong&gt; para el trabajo,&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;GitHub&lt;/strong&gt; para proyectos personales que quiero compartir,&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Gogs&lt;/strong&gt; (inicialmente como prueba, pero terminó siendo mi espacio para guardar configuraciones y backups privados junto a un familiar).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Separar cada servicio es clave para evitar confusiones y errores al realizar modificaciones.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h4 id=&quot;1-un-solo-servicio&quot;&gt;&lt;strong&gt;1. Un solo servicio&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;Si solo usas un servicio, configura tus credenciales globales:&lt;/p&gt;
+&lt;pre class=&quot;language-bash&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; config &lt;span class=&quot;token parameter variable&quot;&gt;--global&lt;/span&gt; user.name &lt;span class=&quot;token string&quot;&gt;&quot;Tu Nombre&quot;&lt;/span&gt;
+&lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; config &lt;span class=&quot;token parameter variable&quot;&gt;--global&lt;/span&gt; user.email &lt;span class=&quot;token string&quot;&gt;&quot;tu.email@ejemplo.com&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Estos valores se aplicarán a todos los repositorios.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h4 id=&quot;2-multiples-servicios&quot;&gt;&lt;strong&gt;2. Múltiples servicios&lt;/strong&gt;&lt;/h4&gt;
+&lt;h5 id=&quot;opcion-1-configuracion-por-repositorio&quot;&gt;&lt;strong&gt;Opción 1: Configuración por repositorio&lt;/strong&gt;&lt;/h5&gt;
+&lt;p&gt;Para cada repositorio, establece credenciales específicas:&lt;/p&gt;
+&lt;pre class=&quot;language-bash&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token builtin class-name&quot;&gt;cd&lt;/span&gt; /ruta/a/tu/repositorio
+&lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; config user.name &lt;span class=&quot;token string&quot;&gt;&quot;Tu Nombre para Gogs&quot;&lt;/span&gt;
+&lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; config user.email &lt;span class=&quot;token string&quot;&gt;&quot;tu.email@gogs.com&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Configura el remoto correctamente&lt;/strong&gt;:&lt;/p&gt;
+&lt;pre class=&quot;language-bash&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; remote &lt;span class=&quot;token function&quot;&gt;add&lt;/span&gt; origin https://gogs.ejemplo.com/usuario/repositorio.git
+&lt;span class=&quot;token comment&quot;&gt;# o para GitHub/GitLab:&lt;/span&gt;
+&lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; remote &lt;span class=&quot;token function&quot;&gt;add&lt;/span&gt; origin https://github.com/usuario/repositorio.git&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h5 id=&quot;opcion-2-uso-de-ssh-recomendado&quot;&gt;&lt;strong&gt;Opción 2: Uso de SSH (recomendado)&lt;/strong&gt;&lt;/h5&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Genera claves SSH&lt;/strong&gt; (si no las tienes):&lt;/p&gt;
+&lt;pre class=&quot;language-bash&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;ssh-keygen &lt;span class=&quot;token parameter variable&quot;&gt;-t&lt;/span&gt; rsa &lt;span class=&quot;token parameter variable&quot;&gt;-b&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;4096&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-C&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;tu.email@ejemplo.com&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Agrega las claves al agente SSH&lt;/strong&gt;:&lt;/p&gt;
+&lt;pre class=&quot;language-bash&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token builtin class-name&quot;&gt;eval&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token variable&quot;&gt;&lt;span class=&quot;token variable&quot;&gt;$(&lt;/span&gt;ssh-agent &lt;span class=&quot;token parameter variable&quot;&gt;-s&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;)&lt;/span&gt;&lt;/span&gt;&quot;&lt;/span&gt;
+ssh-add ~/.ssh/id_rsa_gogs
+ssh-add ~/.ssh/id_rsa_github
+ssh-add ~/.ssh/id_rsa_gitlab&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Configura &lt;code&gt;~/.ssh/config&lt;/code&gt;&lt;/strong&gt;:&lt;/p&gt;
+&lt;pre class=&quot;language-bash&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# Gogs&lt;/span&gt;
+Host gogs
+    HostName gogs.ejemplo.com
+    User &lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt;
+    IdentityFile ~/.ssh/id_rsa_gogs
+
+&lt;span class=&quot;token comment&quot;&gt;# GitHub&lt;/span&gt;
+Host github
+    HostName github.com
+    User &lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt;
+    IdentityFile ~/.ssh/id_rsa_github
+
+&lt;span class=&quot;token comment&quot;&gt;# GitLab&lt;/span&gt;
+Host gitlab
+    HostName gitlab.com
+    User &lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt;
+    IdentityFile ~/.ssh/id_rsa_gitlab&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Usa URLs SSH para los remotos&lt;/strong&gt;:&lt;/p&gt;
+&lt;pre class=&quot;language-bash&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; remote &lt;span class=&quot;token function&quot;&gt;add&lt;/span&gt; origin gogs:usuario/repositorio.git
+&lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; remote &lt;span class=&quot;token function&quot;&gt;add&lt;/span&gt; origin github:usuario/repositorio.git
+&lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; remote &lt;span class=&quot;token function&quot;&gt;add&lt;/span&gt; origin gitlab:usuario/repositorio.git&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h4 id=&quot;bonus-credenciales-temporales&quot;&gt;&lt;strong&gt;Bonus: Credenciales temporales&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;Si necesitas colaborar en un repositorio ajeno sin modificar tu configuración global, usa la URL con credenciales:&lt;/p&gt;
+&lt;pre class=&quot;language-bash&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; remote set-url origin https://username:token@github.com/usuario/repositorio.git&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;em&gt;(Reemplaza &lt;code&gt;token&lt;/code&gt; por un &lt;a href=&quot;https://docs.github.com/es/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic&quot;&gt;Personal Access Token&lt;/a&gt; con permisos de &lt;code&gt;repo&lt;/code&gt;)&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Nota&lt;/strong&gt;: Verifica siempre el directorio y la configuración antes de ejecutar comandos.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Desarrollo local de módulos Node.js con npm link</title>
+    <link href="https://example.com/rutadev/blog/npm-link/" />
+    <updated>2024-06-23T00:00:00Z</updated>
+    <id>https://example.com/rutadev/blog/npm-link/</id>
+    <content type="html">&lt;p&gt;En el trabajo, manejamos un módulo de nuestra aplicación como un paquete independiente. Antes, para probar cambios, seguía estos pasos:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Modificaba el código en el repositorio del paquete.&lt;/li&gt;
+&lt;li&gt;Publicaba una nueva versión.&lt;/li&gt;
+&lt;li&gt;Actualizaba la dependencia en la aplicación principal.&lt;/li&gt;
+&lt;li&gt;Verificaba que todo funcionara.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Para cambios pequeños, a veces editaba directamente el código en &lt;code&gt;node_modules&lt;/code&gt; y luego copiaba los cambios al repositorio del paquete. Sin embargo, existe una forma más eficiente: &lt;strong&gt;&lt;code&gt;npm link&lt;/code&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;h4 id=&quot;por-que-usar-npm-link&quot;&gt;&lt;strong&gt;¿Por qué usar &lt;code&gt;npm link&lt;/code&gt;?&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;Permite probar cambios en tiempo real en la aplicación principal sin necesidad de publicar nuevas versiones del paquete.&lt;/p&gt;
+&lt;h4 id=&quot;uso-basico&quot;&gt;&lt;strong&gt;Uso básico&lt;/strong&gt;&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Crea un enlace simbólico global&lt;/strong&gt; para el módulo:&lt;pre class=&quot;language-bash&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token builtin class-name&quot;&gt;cd&lt;/span&gt; path/to/your/module
+&lt;span class=&quot;token function&quot;&gt;npm&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;link&lt;/span&gt;  &lt;span class=&quot;token comment&quot;&gt;# Crea un enlace simbólico global&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Vincula el módulo&lt;/strong&gt; a tu proyecto:&lt;pre class=&quot;language-bash&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token builtin class-name&quot;&gt;cd&lt;/span&gt; path/to/your/project
+&lt;span class=&quot;token function&quot;&gt;npm&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;link&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;module_name&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;  &lt;span class=&quot;token comment&quot;&gt;# Usa el módulo vinculado&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&quot;escenarios-avanzados&quot;&gt;&lt;strong&gt;Escenarios avanzados&lt;/strong&gt;&lt;/h4&gt;
+&lt;h5 id=&quot;multiples-modulos-locales&quot;&gt;&lt;strong&gt;Múltiples módulos locales&lt;/strong&gt;&lt;/h5&gt;
+&lt;p&gt;Si trabajas con módulos interdependientes (ej: &lt;code&gt;module-a&lt;/code&gt; y &lt;code&gt;module-b&lt;/code&gt;, donde &lt;code&gt;module-b&lt;/code&gt; depende de &lt;code&gt;module-a&lt;/code&gt;):&lt;/p&gt;
+&lt;pre class=&quot;language-bash&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token builtin class-name&quot;&gt;cd&lt;/span&gt; path/to/module-a
+&lt;span class=&quot;token function&quot;&gt;npm&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;link&lt;/span&gt;  &lt;span class=&quot;token comment&quot;&gt;# Registra module-a globalmente&lt;/span&gt;
+
+&lt;span class=&quot;token builtin class-name&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;..&lt;/span&gt;/module-b
+&lt;span class=&quot;token function&quot;&gt;npm&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;link&lt;/span&gt;  &lt;span class=&quot;token comment&quot;&gt;# Registra module-b globalmente&lt;/span&gt;
+&lt;span class=&quot;token function&quot;&gt;npm&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;link&lt;/span&gt; module-a  &lt;span class=&quot;token comment&quot;&gt;# Vincula module-b con module-a&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Esto permite desarrollar y probar módulos interdependientes en tiempo real.&lt;/p&gt;
+&lt;h5 id=&quot;gestionar-dependencias-entre-modulos-vinculados&quot;&gt;&lt;strong&gt;Gestionar dependencias entre módulos vinculados&lt;/strong&gt;&lt;/h5&gt;
+&lt;p&gt;Para asegurar que todos los módulos usen las últimas versiones:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Ejecuta &lt;code&gt;npm update&lt;/code&gt; en cada módulo.&lt;/li&gt;
+&lt;li&gt;Re-ejecuta &lt;code&gt;npm link&lt;/code&gt; después de actualizar para sincronizar los cambios.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&quot;alternativas-a-npm-link&quot;&gt;&lt;strong&gt;Alternativas a &lt;code&gt;npm link&lt;/code&gt;&lt;/strong&gt;&lt;/h4&gt;
+&lt;div class=&quot;&quot;&gt;&lt;table class=&quot;&quot;&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Herramienta&lt;/th&gt;
+&lt;th&gt;Descripción&lt;/th&gt;
+&lt;th&gt;Ventajas&lt;/th&gt;
+&lt;th&gt;Desventajas&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;npm link&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Crea enlaces simbólicos para desarrollo local.&lt;/td&gt;
+&lt;td&gt;Ideal para pruebas en tiempo real.&lt;/td&gt;
+&lt;td&gt;Solo funciona localmente.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;npm pack&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Genera un archivo &lt;code&gt;.tgz&lt;/code&gt; del módulo para instalarlo manualmente.&lt;/td&gt;
+&lt;td&gt;Simula una instalación real.&lt;/td&gt;
+&lt;td&gt;Requiere reinstalar el paquete manualmente.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;yarn link&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Similar a &lt;code&gt;npm link&lt;/code&gt;, pero para Yarn.&lt;/td&gt;
+&lt;td&gt;Integración con Yarn.&lt;/td&gt;
+&lt;td&gt;Limitado a Yarn.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Lerna&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Herramienta para gestionar monorepos con múltiples paquetes interdependientes.&lt;/td&gt;
+&lt;td&gt;Optimizado para monorepos.&lt;/td&gt;
+&lt;td&gt;Curva de aprendizaje.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;p&gt;Enlaces útiles:
+&lt;a href=&quot;https://medium.com/dailyjs/how-to-use-npm-link-7375b6219557&quot;&gt;Medium&lt;/a&gt; |
+&lt;a href=&quot;https://ioflood.com/blog/npm-link/&quot;&gt;ioflood&lt;/a&gt;&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Cómo integrar Pico.css en un proyecto de Nuxt 3</title>
+    <link href="https://example.com/rutadev/blog/pico-css-nuxt-3/" />
+    <updated>2024-02-26T00:00:00Z</updated>
+    <id>https://example.com/rutadev/blog/pico-css-nuxt-3/</id>
+    <content type="html">&lt;h3&gt;&lt;/h3&gt;
+&lt;h4 id=&quot;introduccion&quot;&gt;&lt;strong&gt;Introducción&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;En este artículo, explico cómo agregar &lt;strong&gt;Pico.css&lt;/strong&gt; a un proyecto de &lt;strong&gt;Nuxt 3&lt;/strong&gt;. Tras buscar sin éxito una guía clara, decidí documentar mi solución por si es útil para otros. El proceso es sencillo y rápido.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Nota&lt;/strong&gt;: Asumo que ya tienes un proyecto de Nuxt 3 creado. Si no, sigue la &lt;a href=&quot;https://nuxt.com/docs/getting-started/installation&quot;&gt;documentación oficial&lt;/a&gt; y ejecuta:&lt;/p&gt;
+&lt;pre class=&quot;language-bash&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;npx nuxi@latest init &lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;project-name&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;em&gt;(Requiere Node.js v18.0.0 o superior)&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&quot;1-instalar-pico-css&quot;&gt;&lt;strong&gt;1. Instalar Pico.css&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;A. Visita la &lt;a href=&quot;https://picocss.com/&quot;&gt;página oficial de Pico.css&lt;/a&gt; y dirígete a la sección &lt;strong&gt;&amp;quot;Getting Started&amp;quot;&lt;/strong&gt;.
+B. Elige el comando de instalación según tu gestor de paquetes (npm, yarn, pnpm). Por ejemplo:&lt;/p&gt;
+&lt;pre class=&quot;language-bash&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token function&quot;&gt;npm&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; @picocss/pico&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;C. Verifica la instalación en tu &lt;code&gt;package.json&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class=&quot;language-json&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-json&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token property&quot;&gt;&quot;dependencies&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token property&quot;&gt;&quot;@picocss/pico&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;^2.0.3&quot;&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&quot;2-configurar-pico-css-en-nuxt-3&quot;&gt;&lt;strong&gt;2. Configurar Pico.css en Nuxt 3&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;A. &lt;strong&gt;Crea un archivo CSS&lt;/strong&gt;:
+Dentro de la raíz del proyecto, crea la siguiente estructura:&lt;/p&gt;
+&lt;pre class=&quot;language-bash&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;assets/css/app.css&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;B. &lt;strong&gt;Importa Pico.css&lt;/strong&gt;:
+Abre &lt;code&gt;app.css&lt;/code&gt; y agrega el siguiente código para importar el archivo CSS desde &lt;code&gt;node_modules&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class=&quot;language-css&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-css&quot;&gt;&lt;span class=&quot;token atrule&quot;&gt;&lt;span class=&quot;token rule&quot;&gt;@import&lt;/span&gt; &lt;span class=&quot;token url&quot;&gt;&lt;span class=&quot;token function&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string url&quot;&gt;&quot;@picocss/pico/css/pico.css&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;C. &lt;strong&gt;Inicia el proyecto&lt;/strong&gt;:
+Ejecuta el servidor de desarrollo (ejemplo con &lt;code&gt;pnpm&lt;/code&gt;):&lt;/p&gt;
+&lt;pre class=&quot;language-bash&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token function&quot;&gt;pnpm&lt;/span&gt; run dev&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Pico.css ya estará aplicado a tu proyecto.&lt;/p&gt;
+&lt;h4 id=&quot;resultado&quot;&gt;&lt;strong&gt;Resultado&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;Al iniciar la aplicación, verás los estilos de Pico.css aplicados automáticamente:&lt;/p&gt;
+&lt;p&gt;&lt;picture&gt;&lt;source type=&quot;image/avif&quot; srcset=&quot;https://example.com/rutadev/blog/pico-css-nuxt-3/N381_WHBsq-908.avif 908w&quot;&gt;&lt;source type=&quot;image/webp&quot; srcset=&quot;https://example.com/rutadev/blog/pico-css-nuxt-3/N381_WHBsq-908.webp 908w&quot;&gt;&lt;img loading=&quot;lazy&quot; decoding=&quot;async&quot; src=&quot;https://example.com/rutadev/blog/pico-css-nuxt-3/N381_WHBsq-908.png&quot; alt=&quot;Vista previa de la aplicación con Pico.css&quot; width=&quot;908&quot; height=&quot;625&quot;&gt;&lt;/picture&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;Conclusión&lt;/strong&gt;: Con estos pasos, tendrás Pico.css integrado en tu proyecto de Nuxt 3 de manera rápida y sin complicaciones. ¡Espero que te sea útil!&lt;/p&gt;
+</content>
+  </entry>
+</feed>

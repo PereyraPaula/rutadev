@@ -1,0 +1,27 @@
+---js
+// <script>
+const pagination = {
+	data: "collections",
+	size: 1,
+	alias: "tag",
+	filter: ["all", "posts"],
+	// addAllPagesToCollections: true,
+};
+
+const eleventyExcludeFromCollections = true;
+
+const eleventyComputed = {
+	title: "Etiqueta '{{ tag }}'",
+	permalink: function(data) {
+		// If DuplicatePermalinkOutputError occurs, check that no tag occurs
+		// with differing case, e.g. "RSS" and "rss".
+		return `/tags/${this.slugify(data.tag)}/`;
+	}
+};
+---
+<h1>Etiqueta “{{ tag }}”</h1>
+
+{% set postslist = collections[ tag ] %}
+{% include "postslist.njk" %}
+
+<p>Ver <a href="tags.njk">todos los tags</a>.</p>
