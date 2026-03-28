@@ -29,11 +29,10 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Setup Bun (si no lo tienes en imagen)
-        run: |
-          curl -fsSL https://bun.sh/install | bash
-          echo "${HOME}/.bun/bin" >> $GITHUB_PATH
-          bun --version
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v3
+        with:
+          bun-version: '1.x'
 
       - name: Cache Bun dependencies
         uses: actions/cache@v3
