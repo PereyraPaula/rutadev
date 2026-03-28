@@ -2,67 +2,30 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main ]  # Cambia si tu rama tiene otro nombre
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
-env:
-  NODE_VERSION: 24.11.0
+    branches: ["main"]
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: '22'  # o '22.x', '22.12.0', etc.
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v3
+      - uses: oven-sh/setup-bun@v1
         with:
-          bun-version: '1.x'
+          bun-version: latest
 
-      - name: Cache Bun dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules
-            .bun
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
-          restore-keys: |
-            ${{ runner.os }}-bun-
+      - run: bun install
+      - run: bun run build-ghpages
 
-      - name: Install dependencies with Bun
-        run: bun install
-
-      - name: Build site with Bun
-        # Asegúrate que el script 'build-ghpages' exista en package.json
-        run: bun run build-ghpages
-
-      - name: Upload artifact for GitHub Pages deployment
-        uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v3
         with:
           path: ./_site
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - uses: actions/deploy-pages@v4
